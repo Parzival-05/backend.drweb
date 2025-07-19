@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:5000 wsgi:app
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+  db:
+      image: postgres:17-alpine
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      ports:
+        - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=${FLASK_ENV}
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${FLASK_ENV}"]
+        interval: 2s
+        timeout: 5s
+        retries: 5
+  
+
+volumes:
+  postgres_data: 
