@@ -82,7 +82,8 @@ FLASK_ENV=production
 # testing, development, production
 
 # Database
-POSTGRES_HOST=localhost
+POSTGRES_HOST=db 
+# !!! Use POSTGRES_HOST="localhost" for running locally !!!
 POSTGRES_PORT=5432
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=admin
