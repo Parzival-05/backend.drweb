@@ -1,4 +1,7 @@
 # backend.drweb
+
+[![Run python tests](https://github.com/Parzival-05/backend.drweb/actions/workflows/run_tests.yaml/badge.svg)](https://github.com/Parzival-05/backend.drweb/actions/workflows/run_tests.yaml)
+
 ## Хранилище файлов с доступом по http
 
 ### Описание
