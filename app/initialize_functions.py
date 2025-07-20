@@ -34,7 +34,7 @@ def initialize_db(app: Flask):
     with app.app_context():
         db.init_app(app)
         db.create_all()
-        
+
         # add admin user if not exists
         admin = UserModel(email=os.environ.get("ADMIN_EMAIL"))  # type: ignore
         admin.hash_password(
@@ -53,7 +53,7 @@ def initialize_db(app: Flask):
             try:
                 db.session.rollback()
             except Exception as e:
-                logging.error(f"[DB ROLLBACK ERROR] {e}")
+                logging.error("[DB ROLLBACK ERROR] %s", e)
         db.session.remove()
 
 
