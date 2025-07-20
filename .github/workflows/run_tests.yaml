@@ -36,6 +36,7 @@ jobs:
           POSTGRES_PORT: 5432
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: admin
+          POSTGRES_DB: db
 
           # Log
           LOG_FILE: "app.log"

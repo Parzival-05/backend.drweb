@@ -37,7 +37,7 @@ Firstly, you need to fill the `.env` file. See an example below.
 
 Then run
 ```
-docker compose up --remove-orphans db
+docker compose up --remove-orphans
 ```
 Open via your browser swagger UI and try it out:
 [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
@@ -83,6 +83,7 @@ POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=admin
+POSTGRES_db=db
 
 # Log
 LOG_FILE=app.log

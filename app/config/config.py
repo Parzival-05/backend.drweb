@@ -55,8 +55,6 @@ class BaseConfig(BaseSettings):
     LOG_CONFIG: LogConfig = LogConfig()  # type: ignore
     STORAGE: StorageConfig = StorageConfig()
 
-    FLASK_ENV: str = Field(validation_alias="FLASK_ENV")
-
     COMPRESS_ALGORITHM: str = "brotli"
     COMPRESS_BROTLI_QUALITY: int = 8
 

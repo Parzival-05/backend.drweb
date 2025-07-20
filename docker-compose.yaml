@@ -5,10 +5,28 @@ services:
       - .:/app
     ports:
       - "5000:5000"
+    environment:
+      - FLASK_ENV=${FLASK_ENV}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - LOG_FILE=${LOG_FILE}
+      - POOL_SIZE=${POOL_SIZE}
+      - MAX_OVERFLOW=${MAX_OVERFLOW}
+      - POOL_PRE_PING=${POOL_PRE_PING}
+      - POOL_RECYCLE=${POOL_RECYCLE}
+      - POOL_USE_LIFO=${POOL_USE_LIFO}
+      - POOL_TIMEOUT=${POOL_TIMEOUT}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    depends_on:
+      - db
   db:
       image: postgres:17-alpine
       volumes:
-        - postgres_data:/var/lib/postgresql/data/
+        - postgres_data:/var/lib/postgresql/data2/
       ports:
         - "${POSTGRES_PORT}:${POSTGRES_PORT}"
       environment:

@@ -1,11 +1,12 @@
 FROM python:3.13-alpine
 WORKDIR /app
 
-COPY . .
-
 COPY pyproject.toml poetry.lock ./
+
 RUN pip install --no-cache-dir --upgrade pip poetry
 RUN poetry install --no-cache --only main
+
+COPY . .
 
 EXPOSE 5000
 
