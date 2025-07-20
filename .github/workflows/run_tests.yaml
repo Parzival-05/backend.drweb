@@ -1,0 +1,56 @@
+name: Run python tests
+
+on: [push, pull_request]
+
+jobs:
+  build-and-launch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.5"
+          cache: "poetry"
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Run main repo tests
+        env:
+          FLASK_ENV: testing
+          # testing, development, production
+
+          # Database
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+
+          # Log
+          LOG_FILE: "app.log"
+
+          # DB Engine Options
+          POOL_SIZE: 6
+          MAX_OVERFLOW: 4
+          POOL_PRE_PING: True
+          POOL_RECYCLE: 300
+          POOL_USE_LIFO: True
+          POOL_TIMEOUT: 30
+
+          # Admin's Credentials
+          ADMIN_EMAIL: admin@gmail.com
+          ADMIN_PASSWORD: admin@gmail.com
+        run: |
+          docker compose up --detach --remove-orphans db
+          poetry run pytest app/tests
