@@ -14,9 +14,9 @@ services:
       environment:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        - POSTGRES_DB=${FLASK_ENV}
+        - POSTGRES_DB=${POSTGRES_DB}
       healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${FLASK_ENV}"]
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
         interval: 2s
         timeout: 5s
         retries: 5

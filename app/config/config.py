@@ -12,15 +12,17 @@ class DBConnConfig(BaseSettings):
     PASSWORD: str = Field(validation_alias="POSTGRES_PASSWORD")
     HOST: str = Field(validation_alias="POSTGRES_HOST")
     PORT: int = Field(validation_alias="POSTGRES_PORT")
+    DB: str = Field(validation_alias="POSTGRES_DB")
 
-    def pg_dsn(self, name) -> PostgresDsn:
+    @property
+    def pg_dsn(self) -> PostgresDsn:
         return PostgresDsn.build(
             scheme="postgresql",
             username=self.USER,
             password=self.PASSWORD,
             host=self.HOST,
             port=self.PORT,
-            path=name,
+            path=self.DB,
         )
 
 
@@ -60,7 +62,7 @@ class BaseConfig(BaseSettings):
 
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
-        return self.DB_CONN.pg_dsn(self.FLASK_ENV).encoded_string()
+        return self.DB_CONN.pg_dsn.encoded_string()
 
     @property
     def SQLALCHEMY_ENGINE_OPTIONS(self) -> dict:
