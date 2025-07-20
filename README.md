@@ -37,7 +37,7 @@ Firstly, you need to fill the `.env` file. See an example below.
 
 Then run
 ```
-docker compose up --watch --remove-orphans db
+docker compose up --remove-orphans db
 ```
 Open via your browser swagger UI and try it out:
 [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
@@ -46,14 +46,7 @@ Use admin's credentials:
 - `email`:`...` 
 - `password`:`...`
 
-Or register an ordinary user.
-
-Some note on DB connection: if you need to create an another db (for example, "testing"), use 
-
-```
-docker exec -it backenddrweb-db-1 psql -U admin -d postgres
-CREATE DATABASE IF NOT EXISTS testing
-```
+Or register an ordinary user via api.
 
 ## For devs
 
