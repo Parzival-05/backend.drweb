@@ -34,7 +34,7 @@ def create_app(config=None) -> Flask:
     # Initialize Swagger
     initialize_swagger(app)
 
-    # Initialize Swagger
+    # Initialize middlewares
     initialize_middlewares(app)
 
     # Initialize storage service
