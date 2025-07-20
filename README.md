@@ -1,7 +1,7 @@
 # backend.drweb
 
 [![Run python tests](https://github.com/Parzival-05/backend.drweb/actions/workflows/run_tests.yaml/badge.svg)](https://github.com/Parzival-05/backend.drweb/actions/workflows/run_tests.yaml)
-
+[![Python linting](https://github.com/Parzival-05/backend.drweb/actions/workflows/python_linting.yaml/badge.svg)](https://github.com/Parzival-05/backend.drweb/actions/workflows/python_linting.yaml)
 ## Хранилище файлов с доступом по http
 
 ### Описание
