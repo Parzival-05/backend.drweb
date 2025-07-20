@@ -37,7 +37,7 @@ Firstly, you need to fill the `.env` file. See an example below.
 
 Then run
 ```
-docker compose up --watch --remove-orphans
+docker compose up --watch --remove-orphans db
 ```
 Open via your browser swagger UI and try it out:
 [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
