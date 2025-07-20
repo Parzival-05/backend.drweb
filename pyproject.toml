@@ -5,7 +5,7 @@ description = ""
 authors = ["Parzival-05 <parzivalwasd@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "backend"}]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -14,12 +14,16 @@ dotenv = "^0.9.9"
 flask-sqlalchemy = "^3.1.1"
 pydantic = {extras = ["email"], version = "^2.11.7"}
 pydantic-settings = "^2.10.1"
-psycopg2-binary = "^2.9.10"
 flasgger = "^0.9.7.1"
 passlib = "^1.7.4"
 flask-httpauth = "^4.8.0"
 flask-marshmallow = "^1.3.0"
 flask-restx = "^1.3.0"
+gevent = "^25.5.1"
+psycopg2-binary = "^2.9.10"
+gunicorn = "^23.0.0"
+psycogreen = "^1.0.2"
+flask-compress = "^1.18"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -29,3 +33,6 @@ pytest = "^8.4.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+per-file-ignores = {"wsgi.py" = ["E402"]}

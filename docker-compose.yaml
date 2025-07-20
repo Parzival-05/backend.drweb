@@ -1,7 +1,6 @@
 services:
   web:
     build: .
-    command: gunicorn --bind 0.0.0.0:5000 wsgi:app
     volumes:
       - .:/app
     ports:
@@ -21,7 +20,5 @@ services:
         interval: 2s
         timeout: 5s
         retries: 5
-  
-
 volumes:
   postgres_data: 

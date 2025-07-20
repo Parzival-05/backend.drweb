@@ -7,9 +7,6 @@ COPY pyproject.toml poetry.lock ./
 RUN pip install --no-cache-dir --upgrade pip poetry
 RUN poetry install --no-cache --only main
 
-ENV APP_PORT=5000
-ENV FLASK_APP wsgi.py
-
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
+CMD ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app", "--worker-class", "gevent", "--workers", "6"]

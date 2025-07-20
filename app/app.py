@@ -42,4 +42,5 @@ def create_app(config=None) -> Flask:
 
     # Initialize logging
     initilize_logger(config)
+
     return app

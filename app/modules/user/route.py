@@ -3,6 +3,8 @@ from flask_restx._http import HTTPStatus
 from app.db.base import db
 from app.db.user import UserModel
 from app.api_instance import api
+from app.modules.decorator_utils import decorate_methods
+from app.modules.auth.decorators import auth_admin
 
 ns_users = api.namespace("users", path="/api/users/", description="User operations")
 
@@ -24,6 +26,10 @@ user_input_model = ns_users.model(
 
 
 class Users(Resource):
+    method_decorators = decorate_methods(
+        get=[auth_admin.login_required],
+    )
+
     @ns_users.marshal_with(user_model, as_list=True, description="List of users")
     @ns_users.doc(description="Get list of all users")
     def get(self):
@@ -36,7 +42,7 @@ class Users(Resource):
     def post(self):
         args = api.payload
         if UserModel.query.filter_by(email=args["email"]).first() is not None:
-            abort(HTTPStatus.BAD_REQUEST, message="User already exists")
+            abort(HTTPStatus.BAD_REQUEST, message="User with this email already exists")
         user = UserModel(email=args["email"])  # type: ignore https://github.com/microsoft/pylance-release/issues/6199
         user.hash_password(args["password"])
         db.session.add(user)
@@ -45,6 +51,10 @@ class Users(Resource):
 
 
 class User(Resource):
+    method_decorators = decorate_methods(
+        get=[auth_admin.login_required],
+    )
+
     @ns_users.marshal_with(user_model, description="User")
     @ns_users.doc(description="Get user by id")
     def get(self, user_id):

@@ -37,6 +37,7 @@ file_model = ns_files.model(
 class FileErrors(StrEnum):
     FILE_NOT_FOUND = "File not found"
     FILE_OWNERSHIP_ERROR = "File ownership error"
+    FILE_ALREADY_EXISTS = "File is already exists"
 
 
 class Files(Resource):
@@ -71,20 +72,18 @@ class Files(Resource):
         user = AuthService.get_authorized_user()
         args = upload_file_parser.parse_args()
         file: FileStorage = args.file
-        data = file.stream.read()  # TODO: support of big files
-        file_hash = StorageService.hash_file(data, user_id=user.id)
-        filename = file.name
-        if (
-            FileModel.query.filter_by(file_hash=file_hash, user_id=user.id).first()
-            is not None
-        ):
-            abort(HTTPStatus.BAD_REQUEST, message="File is already exists")
+        stream = file.stream
+        processed_file = StorageService.process_stream(stream)
+        file.close()
+        file_hash = processed_file.file_hash
+        filename = file.filename
+        if FileModel.query.filter_by(file_hash=file_hash).first() is not None:
+            os.remove(processed_file.temp_file_path)
+            abort(HTTPStatus.BAD_REQUEST, message=FileErrors.FILE_ALREADY_EXISTS)
+            return
         file_path = StorageService.file_path(file_hash)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-
-        file.stream.seek(0)  # set cursor to the beginning
-        file.save(file_path)
-        file.close()
+        shutil.move(processed_file.temp_file_path, file_path)
 
         file_model = FileModel(file_hash=file_hash, filename=filename, user_id=user.id)  # type: ignore
         db.session.add(file_model)
@@ -103,9 +102,11 @@ class Files(Resource):
         ).first()
         if file_model is None:
             abort(HTTPStatus.BAD_REQUEST, message=FileErrors.FILE_NOT_FOUND)
+            return
         elif file_model.user_id != user.id:
+            print(file_model.user_id, user.id)
             abort(HTTPStatus.BAD_REQUEST, message=FileErrors.FILE_OWNERSHIP_ERROR)
-
+            return
         file_path = StorageService.file_path(file_hash)
         file_dir = os.path.dirname(file_path)
         if file_dir != FILE_STORAGE_PATH:  # for security reasons

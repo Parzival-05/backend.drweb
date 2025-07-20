@@ -1,18 +1,23 @@
 from unittest.mock import MagicMock
 
 
-def test_get_users_returns_list(client, mock_user_model):
+def test_get_users_returns_list(admin_client, mock_user_model):
     user1 = MagicMock(id=1, email="user1@example.com")
     user2 = MagicMock(id=2, email="user2@example.com")
     mock_user_model.query.all.return_value = [user1, user2]
 
-    resp = client.get("/api/users/")
+    resp = admin_client.get("/api/users/")
     assert resp.status_code == 200
     data = resp.get_json()
     assert isinstance(data, list)
     assert data[0]["id"] == 1
     assert data[0]["email"] == "user1@example.com"
     assert data[1]["id"] == 2
+
+
+def test_get_users_as_not_admin(client):
+    resp = client.get("/api/users/")
+    assert resp.status_code == 401
 
 
 def test_post_user_creates_user(client, mock_user_model, mock_db):
@@ -42,24 +47,24 @@ def test_post_user_already_exists(client, mock_user_model):
     )
     assert resp.status_code == 400
     data = resp.get_json()
-    assert "User already exists" in data["message"]
+    assert "User with this email already exists" in data["message"]
 
 
-def test_get_user_by_id_found(client, mock_user_model):
+def test_get_user_by_id_found(admin_client, mock_user_model):
     user = MagicMock(id=5, email="found@example.com")
     mock_user_model.query.get.return_value = user
 
-    resp = client.get("/api/users/5")
+    resp = admin_client.get("/api/users/5")
     assert resp.status_code == 200
     data = resp.get_json()
     assert data["id"] == 5
     assert data["email"] == "found@example.com"
 
 
-def test_get_user_by_id_not_found(client, mock_user_model):
+def test_get_user_by_id_not_found(admin_client, mock_user_model):
     mock_user_model.query.get.return_value = None
 
-    resp = client.get("/api/users/999")
+    resp = admin_client.get("/api/users/999")
     assert resp.status_code == 400
     data = resp.get_json()
     assert "not found" in data["message"]

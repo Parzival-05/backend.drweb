@@ -33,14 +33,31 @@ Download:
 
 ### Run
 
+Firstly, you need to fill the `.env` file. See an example below.
+
+Then run
 ```
 docker compose up --watch --remove-orphans
 ```
-Open via your browser:
+Open via your browser swagger UI and try it out:
 [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+Use admin's credentials:
+- `email`:`...` 
+- `password`:`...`
+
+Or register an ordinary user.
+
+Some note on DB connection: if you need to create an another db (for example, "testing"), use 
+
+```
+docker exec -it backenddrweb-db-1 psql -U admin -d postgres
+CREATE DATABASE IF NOT EXISTS testing
+```
+
 ## For devs
 
-### Install
+### Install & Run
 
 1. Clone
     ```
@@ -51,18 +68,22 @@ Open via your browser:
    pip install poetry
    poetry install
    ```
-3. Run (don't forget to fil the .env file):
+3. Run (don't forget to fill the .env file) in dev mode:
    ```
    poetry run python run.py
    ```
+4. Or run in production mode:
+   ```
+   poetry run gunicorn --worker-class gevent --workers 6 --bind 0.0.0.0:5000 wsgi:app
+   ```
+5. Go to 
 
-### .env file example
+### `.env` file example
 
 ```
 # App
-FLASK_APP=run.py
-FLASK_ENV=development 
-# testing, development
+FLASK_ENV=production 
+# testing, development, production
 
 # Database
 POSTGRES_HOST=localhost
@@ -72,4 +93,16 @@ POSTGRES_PASSWORD=admin
 
 # Log
 LOG_FILE=app.log
+
+# DB Engine Options
+POOL_SIZE=6
+MAX_OVERFLOW=4
+POOL_PRE_PING=True
+POOL_RECYCLE=300
+POOL_USE_LIFO=True
+POOL_TIMEOUT=30
+
+# Admin's Credentials
+ADMIN_EMAIL = admin@gmail.com
+ADMIN_PASSWORD = admin@gmail.com
 ```
