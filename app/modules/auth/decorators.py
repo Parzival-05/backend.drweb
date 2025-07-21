@@ -1,3 +1,5 @@
+import os
+
 from flask import g
 
 from flask_httpauth import HTTPBasicAuth
@@ -23,7 +25,8 @@ def verify_admin(email, password):
     if (
         not user
         or not user.verify_password(password)
-        or not user.email == "admin@gmail.com" # TODO: we need a better place for it
+        or not user.email
+        == os.environ.get("ADMIN_EMAIL", "")  # TODO: we need a better place for it
     ):
         return None
     g.user = user
